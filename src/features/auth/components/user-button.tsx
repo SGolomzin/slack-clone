@@ -18,20 +18,19 @@ import { useCurrentUser } from "~/features/auth/hooks/use-current-user";
 import { Loader, LogOut } from "lucide-react";
 
 export const UserButton = () => {
-	const { data, isLoading } = useCurrentUser();
+	const { data: userData, isLoading } = useCurrentUser();
+	const { signOut } = useAuthActions();
+	const router = useRouter()
 
 	if (isLoading) return <Loader className="size-4 animate-spin text-muted-foreground" />;
 
-	if (!data) {
+	if (!userData) {
 		return null;
 	}
 
-	const { name, image} = data;
+	const { name, image} = userData;
 
 	const avatarFallback = name!.charAt(0).toUpperCase();
-
-	const { signOut } = useAuthActions();
-	const router = useRouter()
 
 	return (
 		<DropdownMenu modal={false}>
