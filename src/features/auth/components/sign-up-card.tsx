@@ -1,3 +1,5 @@
+"use client";
+
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { TriangleAlert } from "lucide-react";
@@ -10,6 +12,7 @@ import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { SignInFlow } from "~/features/auth/types";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface SignUpCardProps {
 	setState: (state: SignInFlow) => void;
@@ -18,11 +21,14 @@ interface SignUpCardProps {
 export const SignUpCard = ({ setState }: SignUpCardProps) => {
 	const { signIn } = useAuthActions();
 
+	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [error, setError] = useState("");
 	const [pending, setPending] = useState(false);
+
+	const router = useRouter();
 
 	const onPasswordSignUp = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -33,11 +39,14 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
 		}
 
 		setPending(true);
-		signIn("password", { email, password, flow: "signUp" })
+		signIn("password", { email, password, name, flow: "signUp" })
 			.catch(() => {
 				setError("Something went wrong");
 			})
-			.finally(() => setPending(false));
+			.finally(() => {
+				setPending(false);
+				router.push("/");
+			});
 	}
 
 	const onProviderSignUp = (value: "github" | "google") => {
@@ -64,6 +73,14 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
 			)}
 			<CardContent className="space-y-5 px-0 pb-0">
 				<form onSubmit={onPasswordSignUp} className="space-y-2.5">
+					<Input
+						disabled={pending}
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						placeholder="Enter your name"
+						type="text"
+						required
+					/>
 					<Input
 						disabled={pending}
 						value={email}

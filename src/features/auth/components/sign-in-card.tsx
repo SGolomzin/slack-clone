@@ -1,3 +1,5 @@
+"use client";
+
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { TriangleAlert } from "lucide-react";
@@ -10,6 +12,7 @@ import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { SignInFlow } from "~/features/auth/types";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface SignInCardProps {
 	setState: (state: SignInFlow) => void;
@@ -23,6 +26,8 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 	const [error, setError] = useState("");
 	const [pending, setPending] = useState(false);
 
+	const router = useRouter();
+
 	const onPasswordSignIn = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setPending(true);
@@ -30,7 +35,10 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 			.catch(() => {
 				setError("Invalid email or password");
 			})
-			.finally(() => setPending(false));
+			.finally(() => {
+				setPending(false);
+				router.push("/");
+			});
 	}
 
 	const onProviderSignIn = (value: "github" | "google") => {
