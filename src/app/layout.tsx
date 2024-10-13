@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Modals } from "~/components/modals";
-import { Toaster } from "~/components/ui/sonner";
+import { Toaster } from "sonner";
 import { JotaiProvider } from "~/components/jotai-provider";
 
 const geistSans = localFont({
