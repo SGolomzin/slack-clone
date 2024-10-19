@@ -8,9 +8,12 @@ import { useGetChannels } from "~/features/channels/api/use-get-channels";
 import { WorkspaceSection } from "~/app/workspace/[workspaceId]/workspace-section";
 import { useGetMembers } from "~/features/members/api/use-get-members";
 import { UserItem } from "~/app/workspace/[workspaceId]/user-item";
+import { useCreateChannelModal } from "~/features/channels/store/use-create-channel-modal";
 
 export const WorkspaceSidebar = () => {
 	const workspaceId = useWorkspaceId();
+
+	const [_open, setOpen] = useCreateChannelModal();
 
 	const { data: member, isLoading: memberIsLoading} = useCurrentMember({ workspaceId });
 	const { data: workspace, isLoading: workspaceIsLoading} = useGetWorkspace({ id: workspaceId });
@@ -53,7 +56,7 @@ export const WorkspaceSidebar = () => {
 			<WorkspaceSection
 				label="Channels"
 				hint="New channel"
-				onNew={() => {}}
+				onNew={member.role === 'admin' ? () => setOpen(true) : undefined }
 			>
 				{channels?.map((item) => (
 					<SidebarItem
